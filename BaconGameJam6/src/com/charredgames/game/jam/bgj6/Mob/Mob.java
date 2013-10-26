@@ -12,12 +12,14 @@ public class Mob {
 	protected Sprite sprite;
 	protected Keyboard input;
 	protected boolean removed = false;
+	protected int direction = 0;
+	public int points = 0;
 	
-	
-	public Mob(int x, int y, Sprite sprite){
+	public Mob(int x, int y, int points, Sprite sprite){
 		this.x = x;
 		this.y = y;
 		this.sprite = sprite;
+		this.points = points;
 		Controller.addMob(this);
 	}
 	

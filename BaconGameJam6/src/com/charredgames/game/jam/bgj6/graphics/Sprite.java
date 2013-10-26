@@ -10,8 +10,14 @@ public class Sprite {
 	public int[] pixels;
 	
 	public static Sprite cloud = new Sprite(64, 0, 1, SpriteSheet.sprites);
-	
+	public static Sprite coin = new Sprite(16, 1, 0, SpriteSheet.sprites);
 	public static Sprite rainbowSprite = new Sprite(Main.rainbowStrandWidth, 0xFFFF0000);
+	
+	public static Sprite player_forward = new Sprite(16, 1, 0, SpriteSheet.mobs);
+	public static Sprite player_backward = new Sprite(16, 0, 0, SpriteSheet.mobs);
+	public static Sprite player_left = new Sprite(16, 2, 0, SpriteSheet.mobs);
+	public static Sprite player_right = new Sprite(16, 3, 0, SpriteSheet.mobs);
+	
 	
 	public Sprite(int size, int x, int y, SpriteSheet spriteSheet){
 		this.size = size;

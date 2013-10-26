@@ -13,6 +13,7 @@ import java.util.Random;
 import javax.swing.JFrame;
 
 import com.charredgames.game.jam.bgj6.Mob.Mob;
+import com.charredgames.game.jam.bgj6.Mob.Player;
 import com.charredgames.game.jam.bgj6.graphics.Screen;
 import com.charredgames.game.jam.bgj6.graphics.Sprite;
 import com.charredgames.game.jam.bgj6.graphics.Tile;
@@ -39,12 +40,16 @@ public class Main extends Canvas implements Runnable{
 	public static final int rainbowStrandWidth = 32;
 	private Keyboard keyboard;
 	private Screen screen;
+	private Player player;
 	private Random rand = new Random();
 	
 	private void tick(){
 		if(paused) return;
 		keyboard.update();
+		player.update();
 		Controller.updateMobs();
+		generateCloud();
+		generateCoin();
 	}
 	
 	private void render(){
@@ -58,18 +63,14 @@ public class Main extends Canvas implements Runnable{
 		screen.clear();
 		
 		loadRainbow();
-		
 		Controller.renderMobs(screen);
+		player.render(screen);
 		
 		for(int i = 0; i < pixels.length; i++){
 			pixels[i] = screen.pixels[i];
 		}
 		
 		g.drawImage(image, 0, 0, window.getWidth(), window.getHeight(), null);
-		
-		//loadRainbow();
-		
-		if(!paused) generateCloud();
 		
 		
 		//Logo & title
@@ -86,13 +87,21 @@ public class Main extends Canvas implements Runnable{
 		buffer.show();
 	}
 	
+	private void generateCoin(){
+		if(rand.nextInt(20) == 1){
+			int xPos = Math.abs(rand.nextInt(getRainbowRightEdge() - getRainbowLeftEdge()));
+			xPos += getRainbowLeftEdge();
+			new Mob(xPos, -100, 5, Sprite.coin);
+		}
+	}
+	
 	//Doesn't need to be a separate function, but reduces clutter.
 	private void generateCloud(){
 		int shouldSpawn = rand.nextInt(4000);
 		if(shouldSpawn < 6){
 			int side = rand.nextInt(2);
-			if(side==1) new Mob(10,-100, Sprite.cloud);
-			else new Mob(_WIDTH - 50, -100, Sprite.cloud);
+			if(side==1) new Mob(10,-100, 0, Sprite.cloud);
+			else new Mob(_WIDTH - 50, -100, 0, Sprite.cloud);
 		}
 	}
 	
@@ -163,6 +172,7 @@ public class Main extends Canvas implements Runnable{
 		addMouseListener(mouse);
 		addMouseMotionListener(mouse);
 		screen = new Screen(_WIDTH, _HEIGHT);
+		player = new Player(keyboard);
 	}
 	
 	public static void main(String[] args){
@@ -181,6 +191,14 @@ public class Main extends Canvas implements Runnable{
 	
 	public static int getWindowHeight(){
 		return window.getHeight();
+	}
+	
+	public static int getRainbowLeftEdge(){
+		return (int) ((_WIDTH/2)-(rainbowStrandWidth*(3.5)));
+	}
+	
+	public static int getRainbowRightEdge(){
+		return getRainbowLeftEdge() + (rainbowStrandWidth * 7);
 	}
 	
 }
