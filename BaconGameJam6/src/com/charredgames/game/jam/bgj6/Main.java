@@ -68,6 +68,7 @@ public class Main extends Canvas implements Runnable{
 			return;
 		}
 		g = buffer.getDrawGraphics();
+		
 
 		screen.clear();
 		
@@ -81,21 +82,23 @@ public class Main extends Canvas implements Runnable{
 		
 		g.drawImage(image, 0, 0, window.getWidth(), window.getHeight(), null);
 		
-		g.setColor(Color.BLACK);
-		
-		//Pause button && popup
-		if(paused){
-			g.drawString("Resume", 5, 45);
-			g.drawString("PAUSED", (window.getWidth()-g.getFontMetrics().stringWidth("PAUSED"))/2, (window.getHeight()-g.getFontMetrics().getHeight())/2);
-		}
-		else{
-			g.drawString("Resume", 5, 45);
-		}
-		
 		//Score & Time
 		g.setColor(Color.WHITE);
 		g.drawString("Time: " + Controller.getTime(), 5, 15);
 		g.drawString("Score " + Controller.getScore(), 5, 30);
+		g.drawString("Health: " + player.getHealth(), 5, 45);
+		
+		//Draw power-up timers
+		int timerDrawY = 150;
+		g.setColor(Color.WHITE);
+		g.drawString("Powerup Time Remaining:", 5, timerDrawY);
+		timerDrawY+= 15;
+		g.drawString("Speed: " + Controller.powerups.get(Powerups.SPEED), 5, timerDrawY);
+		timerDrawY += 15;
+		g.drawString("Magnet: " + Controller.powerups.get(Powerups.MAGNET), 5, timerDrawY);
+		timerDrawY += 15;
+		g.drawString("Invincible: " + Controller.powerups.get(Powerups.INVINCIBLE), 5, timerDrawY);
+		
 		
 		//Logo & title
 		g.setColor(Color.GREEN);
@@ -106,6 +109,44 @@ public class Main extends Canvas implements Runnable{
 		g.drawString("Charred", window.getWidth()-g.getFontMetrics().stringWidth("CharredGames")-15, 40);
 		g.setColor(new Color(0xFF00AFC9));
 		g.drawString("Games", window.getWidth()-g.getFontMetrics().stringWidth("Charred"), 40);
+		
+		//Pause button && popup
+		g.setColor(Color.BLACK);
+		g.setFont(new Font(Font.DIALOG, Font.PLAIN, 16));
+		if(paused){
+			g.drawString("Resume", 5, 65);
+			g.setFont(new Font(Font.DIALOG, Font.BOLD, 40));
+			g.setColor(new Color(0xFF00AFC9));
+			g.drawString("PAUSED", (window.getWidth()-g.getFontMetrics().stringWidth("PAUSED"))/2, (window.getHeight()-g.getFontMetrics().getHeight())/2);
+		}
+		else{
+			g.setFont(new Font(Font.DIALOG, Font.PLAIN, 16));
+			g.drawString("Pause", 5, 65);
+		}
+		g.setFont(new Font(Font.DIALOG, Font.PLAIN, 16));
+		
+		g.setColor(Color.BLACK);
+		if(Controller.soundOn) g.drawString("Sound: On", 5, 82);
+		else g.drawString("Sound: Off", 5, 82);
+		
+		if(Mouse.getMouseButton() == 1){
+			int mX = Mouse.getX(), mY = Mouse.getY();
+			int pauseStartX = 5, pauseEndX = g.getFontMetrics().stringWidth("Resume") + pauseStartX;
+			int pauseStartY = 65, pauseEndY = pauseStartY - g.getFontMetrics().getHeight();
+			if((mX >= pauseStartX && mX <= pauseEndX) && (mY <= pauseStartY && mY >= pauseEndY)){
+				if(paused) paused = false;
+				else paused = true;
+			}
+			
+			int soundStartX = 5, soundEndX = g.getFontMetrics().stringWidth("Sound: On") + soundStartX;
+			int soundStartY = 82, soundEndY =  soundStartY - g.getFontMetrics().getHeight();
+			if((mX >= soundStartX && mX <= soundEndX) && (mY <= soundStartY && mY >= soundEndY)){
+				if(Controller.soundOn) Controller.soundOn = false;
+				else Controller.soundOn = true;
+			}
+			
+			Mouse.reset();
+		}
 		
 		g.dispose();
 		buffer.show();
@@ -226,6 +267,7 @@ public class Main extends Canvas implements Runnable{
 		addMouseMotionListener(mouse);
 		screen = new Screen(_WIDTH, _HEIGHT);
 		player = new Player(keyboard);
+		player.setPosition(_WIDTH/2, _HEIGHT);
 		Controller.powerups.put(Powerups.MAGNET, 0);
 		Controller.powerups.put(Powerups.INVINCIBLE,0);
 		Controller.powerups.put(Powerups.SPEED, 0);

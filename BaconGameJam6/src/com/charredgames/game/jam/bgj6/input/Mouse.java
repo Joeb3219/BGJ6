@@ -6,7 +6,7 @@ import java.awt.event.MouseMotionListener;
 
 public class Mouse implements MouseMotionListener, MouseListener{
 	
-	private int x, y, mouseButton = -1;
+	private static int x, y, mouseButton = -1;
 	
 	public void mouseClicked(MouseEvent e) {
 		x = e.getX();
@@ -39,16 +39,20 @@ public class Mouse implements MouseMotionListener, MouseListener{
 		y = e.getY();
 	}
 	
-	public int getX(){
+	public static int getX(){
 		return x;
 	}
 	
-	public int getY(){
+	public static int getY(){
 		return y;
 	}
 	
-	public int getMouseButton(){
+	public static int getMouseButton(){
 		return mouseButton;
+	}
+	
+	public static void reset(){
+		mouseButton = -1;
 	}
 
 }

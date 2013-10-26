@@ -4,6 +4,7 @@ import java.util.Map.Entry;
 
 import com.charredgames.game.jam.bgj6.Controller;
 import com.charredgames.game.jam.bgj6.Main;
+import com.charredgames.game.jam.bgj6.Sound;
 import com.charredgames.game.jam.bgj6.graphics.Screen;
 import com.charredgames.game.jam.bgj6.graphics.Sprite;
 import com.charredgames.game.jam.bgj6.input.Keyboard;
@@ -42,12 +43,43 @@ public class Player extends Mob{
 		if(this.y > Main.getWindowHeight()/3 - 16) this.y = Main.getWindowHeight()/3 - 16;
 		
 		checkCollision();
-		
+		if(magnet) checkNearbyCoins();
 		resetPowerups();
 	}
 	
+	private void damage(){
+		health--;
+		Sound.damage.playSound();
+	}
+	
+	private void checkNearbyCoins(){
+		int checkDistance = Controller.magnetDistance;
+		for(Mob mob : Controller.mobs){
+			if(mob.getPoints()<0 || mob.removed()) continue;
+			if((mob.getX() >= this.x && mob.getX() <= this.x+checkDistance)&&(mob.getY() >= this.y && mob.getY() <= this.y+checkDistance)){
+				mob.remove();
+				Controller.score += mob.getPoints();
+				checkPositive(mob);
+			}
+			else if((mob.getX()+10 >= this.x && mob.getX()+checkDistance <= this.x+checkDistance)&&(mob.getY()+10 >= this.y && mob.getY()+checkDistance <= this.y+checkDistance)){
+				mob.remove();
+				Controller.score += mob.getPoints();
+				checkPositive(mob);
+			}
+			else if((mob.getX() >= this.x && mob.getX() <= this.x+checkDistance)&&(mob.getY()+checkDistance >= this.y && mob.getY()+checkDistance <= this.y+checkDistance)){
+				mob.remove();
+				Controller.score += mob.getPoints();
+				checkPositive(mob);
+			}
+			else if((mob.getX()+checkDistance >= this.x && mob.getX()+checkDistance <= this.x+checkDistance)&&(mob.getY() >= this.y && mob.getY() <= this.y+checkDistance)){
+				mob.remove();
+				Controller.score += mob.getPoints();
+				checkPositive(mob);
+			}
+		}
+	}
+	
 	private void resetPowerups(){
-		System.out.println(Controller.powerups.get(Powerups.INVINCIBLE));
 		if(Controller.powerups.get(Powerups.INVINCIBLE) == 0) invincible = false;
 		if(Controller.powerups.get(Powerups.MAGNET) == 0) magnet = false;
 		if(Controller.powerups.get(Powerups.SPEED) == 0) speed = 1;
@@ -60,43 +92,46 @@ public class Player extends Mob{
 			if(pType==Powerups.SPEED) speed=2;
 			else if(pType == Powerups.INVINCIBLE) invincible = true;
 			else if(pType == Powerups.MAGNET) magnet = true;
+			Sound.powerup.playSound();
 		}
+		else if(mob.getPoints() > 0) Sound.coin.playSound();
 	}
 	
 	private void checkCollision(){
 		for(Mob mob : Controller.mobs){
-			if(!mob.removed() && (mob.getX() >= this.x && mob.getX() <= this.x+10)&&(mob.getY() >= this.y && mob.getY() <= this.y+10)){
+			if(mob.removed()) continue;
+			if((mob.getX() >= this.x && mob.getX() <= this.x+10)&&(mob.getY() >= this.y && mob.getY() <= this.y+10)){
 				mob.remove();
 				if(!invincible && mob.getPoints()<0) {
 					Controller.score += mob.getPoints();
-					health--;
+					damage();
 				}
 				if(mob.getPoints()>=0) Controller.score += mob.getPoints();
 				checkPositive(mob);
 			}
-			else if(!mob.removed() && (mob.getX()+10 >= this.x && mob.getX()+10 <= this.x+16)&&(mob.getY()+10 >= this.y && mob.getY()+10 <= this.y+16)){
+			else if((mob.getX()+10 >= this.x && mob.getX()+10 <= this.x+10)&&(mob.getY()+10 >= this.y && mob.getY()+10 <= this.y+10)){
 				mob.remove();
 				if(!invincible && mob.getPoints()<0) {
 					Controller.score += mob.getPoints();
-					health--;
+					damage();
 				}
 				if(mob.getPoints()>=0) Controller.score += mob.getPoints();
 				checkPositive(mob);
 			}
-			else if(!mob.removed() && (mob.getX() >= this.x && mob.getX() <= this.x+10)&&(mob.getY()+10 >= this.y && mob.getY()+10 <= this.y+10)){
+			else if((mob.getX() >= this.x && mob.getX() <= this.x+10)&&(mob.getY()+10 >= this.y && mob.getY()+10 <= this.y+10)){
 				mob.remove();
 				if(!invincible && mob.getPoints()<0) {
 					Controller.score += mob.getPoints();
-					health--;
+					damage();
 				}
 				if(mob.getPoints()>=0) Controller.score += mob.getPoints();
 				checkPositive(mob);
 			}
-			else if(!mob.removed() && (mob.getX()+10 >= this.x && mob.getX()+10 <= this.x+10)&&(mob.getY() >= this.y && mob.getY() <= this.y+10)){
+			else if((mob.getX()+10 >= this.x && mob.getX()+10 <= this.x+10)&&(mob.getY() >= this.y && mob.getY() <= this.y+10)){
 				mob.remove();
 				if(!invincible && mob.getPoints()<0) {
 					Controller.score += mob.getPoints();
-					health--;
+					damage();
 				}
 				if(mob.getPoints()>=0) Controller.score += mob.getPoints();
 				checkPositive(mob);
@@ -117,6 +152,10 @@ public class Player extends Mob{
 	public void setPosition(int x, int y){
 		this.x = x;
 		this.y = y;
+	}
+	
+	public int getHealth(){
+		return health;
 	}
 	
 }

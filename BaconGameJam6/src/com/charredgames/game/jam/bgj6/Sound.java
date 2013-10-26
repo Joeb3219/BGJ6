@@ -13,13 +13,15 @@ public class Sound {
 
 	public AudioClip clip;
 	
-	public static Sound test = new Sound("/sound/pickup.wav");
+	public static Sound damage = new Sound("/sound/hurt1.wav");
+	public static Sound powerup = new Sound("/sound/powerup.wav");
+	public static Sound coin = new Sound("/sound/coin.wav");
 	
 	public Sound(String path){
 			this.clip = Applet.newAudioClip(Sound.class.getResource(path));
 	}
 
 	public synchronized void playSound() {
-		clip.play();
+		if(Controller.soundOn) clip.play();
 	}
 }

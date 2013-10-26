@@ -26,6 +26,8 @@ public class Controller {
 	// Powerups are stored as Powerups(Type)/Integers.
 	// This way they can easily be decremented.
 	public static Map<Powerups, Integer> powerups = new HashMap<Powerups, Integer>();
+	public static int magnetDistance = 128;
+	public static boolean soundOn = true;
 	
 	public static void incrementPowerup(Powerups type){
 		for(Entry<Powerups, Integer> entry : powerups.entrySet()){
