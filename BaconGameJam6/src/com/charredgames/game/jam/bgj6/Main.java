@@ -45,11 +45,14 @@ public class Main extends Canvas implements Runnable{
 	
 	private void tick(){
 		if(paused) return;
+		Controller.update();
 		keyboard.update();
 		player.update();
 		Controller.updateMobs();
+		Controller.tickCount++;
 		generateCloud();
 		generateCoin();
+		generateMob();
 		generateMob();
 	}
 	
@@ -67,12 +70,16 @@ public class Main extends Canvas implements Runnable{
 		Controller.renderMobs(screen);
 		player.render(screen);
 		
-		for(int i = 0; i < pixels.length; i++){
+		for( int i = 0; i < pixels.length; i++){
 			pixels[i] = screen.pixels[i];
 		}
 		
 		g.drawImage(image, 0, 0, window.getWidth(), window.getHeight(), null);
 		
+		//Score & Time
+		g.setColor(Color.WHITE);
+		g.drawString("Time: " + Controller.getTime(), 5, 15);
+		g.drawString("Score " + Controller.getScore(), 5, 30);
 		
 		//Logo & title
 		g.setColor(Color.GREEN);
@@ -89,14 +96,14 @@ public class Main extends Canvas implements Runnable{
 	}
 	
 	private void generateMob(){
-		if(rand.nextInt(5) == 1){
+		if(Controller.seconds >= 300 || rand.nextInt(300-Controller.seconds) < 5){
 			int xPos = Math.abs(rand.nextInt(getRainbowRightEdge() - getRainbowLeftEdge()));
 			xPos += (getRainbowLeftEdge() - 8);
 			int mobType = rand.nextInt(3);
 			if(mobType==0) new Mob(xPos, -100, -2, Sprite.mob_santa);
 			else if(mobType==1) new Mob(xPos, -100, -3, Sprite.mob_rabbit);
 			else if(mobType==2) new Mob(xPos, -100, -3, Sprite.mob_cat);
-			
+			Sound.test.playSound();
 		}
 	}
 	
