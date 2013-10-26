@@ -44,4 +44,16 @@ public class Mob {
 		removed = true;
 	}
 	
+	public int getPoints(){
+		return points;
+	}
+	
+	public int getX(){
+		return x;
+	}
+	
+	public int getY(){
+		return y;
+	}
+	
 }

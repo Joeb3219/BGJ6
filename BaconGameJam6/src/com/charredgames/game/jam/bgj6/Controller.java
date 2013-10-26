@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.charredgames.game.jam.bgj6.Mob.Mob;
+import com.charredgames.game.jam.bgj6.Mob.Powerups;
 import com.charredgames.game.jam.bgj6.graphics.Screen;
 import com.charredgames.game.jam.bgj6.graphics.Tile;
 
@@ -19,8 +21,17 @@ public class Controller {
 			0xFF0000ff, 0xFF4b0082, 0xFF8f00ff
 			));
 	public static int tickCount = 0;
-	public static int seconds = 275;
+	public static int seconds = 0;
 	public static int score = 0;
+	// Powerups are stored as Powerups(Type)/Integers.
+	// This way they can easily be decremented.
+	public static Map<Powerups, Integer> powerups = new HashMap<Powerups, Integer>();
+	
+	public static void incrementPowerup(Powerups type){
+		for(Entry<Powerups, Integer> entry : powerups.entrySet()){
+			if(entry.getKey()==type) entry.setValue(entry.getValue() + 20);
+		}
+	}
 	
 	public static String getScore(){
 		return String.format("%07d", score);
@@ -37,7 +48,12 @@ public class Controller {
 	}
 	
 	public static void update(){
-		if(tickCount % Main._DESIREDTPS == 0) seconds++;
+		if(tickCount % Main._DESIREDTPS == 0) {
+			seconds++;
+			for(Entry<Powerups, Integer> entry : powerups.entrySet()){
+				if(entry.getValue()>0) entry.setValue(entry.getValue()-1);
+			}
+		}
  	}
 	
 	public static void addTile(int identifier, Tile tile){

@@ -14,6 +14,8 @@ import javax.swing.JFrame;
 
 import com.charredgames.game.jam.bgj6.Mob.Mob;
 import com.charredgames.game.jam.bgj6.Mob.Player;
+import com.charredgames.game.jam.bgj6.Mob.Powerup;
+import com.charredgames.game.jam.bgj6.Mob.Powerups;
 import com.charredgames.game.jam.bgj6.graphics.Screen;
 import com.charredgames.game.jam.bgj6.graphics.Sprite;
 import com.charredgames.game.jam.bgj6.graphics.Tile;
@@ -54,6 +56,9 @@ public class Main extends Canvas implements Runnable{
 		generateCoin();
 		generateMob();
 		generateMob();
+		generateMob();
+		generateMob();
+		generatePowerup();
 	}
 	
 	private void render(){
@@ -75,6 +80,17 @@ public class Main extends Canvas implements Runnable{
 		}
 		
 		g.drawImage(image, 0, 0, window.getWidth(), window.getHeight(), null);
+		
+		g.setColor(Color.BLACK);
+		
+		//Pause button && popup
+		if(paused){
+			g.drawString("Resume", 5, 45);
+			g.drawString("PAUSED", (window.getWidth()-g.getFontMetrics().stringWidth("PAUSED"))/2, (window.getHeight()-g.getFontMetrics().getHeight())/2);
+		}
+		else{
+			g.drawString("Resume", 5, 45);
+		}
 		
 		//Score & Time
 		g.setColor(Color.WHITE);
@@ -103,7 +119,24 @@ public class Main extends Canvas implements Runnable{
 			if(mobType==0) new Mob(xPos, -100, -2, Sprite.mob_santa);
 			else if(mobType==1) new Mob(xPos, -100, -3, Sprite.mob_rabbit);
 			else if(mobType==2) new Mob(xPos, -100, -3, Sprite.mob_cat);
-			Sound.test.playSound();
+		}
+	}
+	
+	private void generatePowerup(){
+		if(rand.nextInt(300) == 1){
+			int xPos = Math.abs(rand.nextInt(getRainbowRightEdge() - getRainbowLeftEdge()));
+			xPos += (getRainbowLeftEdge() + 16);
+			new Powerup(xPos, -100, 5, Powerups.SPEED);
+		}
+		else if(rand.nextInt(1250) == 1){
+			int xPos = Math.abs(rand.nextInt(getRainbowRightEdge() - getRainbowLeftEdge()));
+			xPos += (getRainbowLeftEdge() + 16);
+			new Powerup(xPos, -100, 5, Powerups.MAGNET);
+		}
+		else if(rand.nextInt(5000) == 1){
+			int xPos = Math.abs(rand.nextInt(getRainbowRightEdge() - getRainbowLeftEdge()));
+			xPos += (getRainbowLeftEdge() + 16);
+			new Powerup(xPos, -100, 5, Powerups.INVINCIBLE);
 		}
 	}
 	
@@ -193,6 +226,9 @@ public class Main extends Canvas implements Runnable{
 		addMouseMotionListener(mouse);
 		screen = new Screen(_WIDTH, _HEIGHT);
 		player = new Player(keyboard);
+		Controller.powerups.put(Powerups.MAGNET, 0);
+		Controller.powerups.put(Powerups.INVINCIBLE,0);
+		Controller.powerups.put(Powerups.SPEED, 0);
 	}
 	
 	public static void main(String[] args){

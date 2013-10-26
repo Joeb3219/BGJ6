@@ -21,7 +21,10 @@ public class Sprite {
 	public static Sprite mob_santa = new Sprite(16, 0, 1, SpriteSheet.mobs);
 	public static Sprite mob_rabbit = new Sprite(16, 1, 1, SpriteSheet.mobs);
 	public static Sprite mob_cat = new Sprite(16, 0, 2, SpriteSheet.mobs);
-
+	
+	public static Sprite powerup_invincible = new Sprite(16, 1, 1, SpriteSheet.sprites);
+	public static Sprite powerup_magnet = new Sprite(16, 1, 2, SpriteSheet.sprites);
+	public static Sprite powerup_speed = new Sprite(16, 1, 3, SpriteSheet.sprites);
 
 	public Sprite(int size, int x, int y, SpriteSheet spriteSheet){
 		this.size = size;
