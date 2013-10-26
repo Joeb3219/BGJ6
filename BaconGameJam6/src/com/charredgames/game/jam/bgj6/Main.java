@@ -50,6 +50,7 @@ public class Main extends Canvas implements Runnable{
 		Controller.updateMobs();
 		generateCloud();
 		generateCoin();
+		generateMob();
 	}
 	
 	private void render(){
@@ -87,10 +88,22 @@ public class Main extends Canvas implements Runnable{
 		buffer.show();
 	}
 	
-	private void generateCoin(){
-		if(rand.nextInt(20) == 1){
+	private void generateMob(){
+		if(rand.nextInt(5) == 1){
 			int xPos = Math.abs(rand.nextInt(getRainbowRightEdge() - getRainbowLeftEdge()));
-			xPos += getRainbowLeftEdge();
+			xPos += (getRainbowLeftEdge() - 8);
+			int mobType = rand.nextInt(3);
+			if(mobType==0) new Mob(xPos, -100, -2, Sprite.mob_santa);
+			else if(mobType==1) new Mob(xPos, -100, -3, Sprite.mob_rabbit);
+			else if(mobType==2) new Mob(xPos, -100, -3, Sprite.mob_cat);
+			
+		}
+	}
+	
+	private void generateCoin(){
+		if(rand.nextInt(100) == 1){
+			int xPos = Math.abs(rand.nextInt(getRainbowRightEdge() - getRainbowLeftEdge()));
+			xPos += (getRainbowLeftEdge() + 16);
 			new Mob(xPos, -100, 5, Sprite.coin);
 		}
 	}

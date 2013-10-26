@@ -18,7 +18,11 @@ public class Sprite {
 	public static Sprite player_left = new Sprite(16, 2, 0, SpriteSheet.mobs);
 	public static Sprite player_right = new Sprite(16, 3, 0, SpriteSheet.mobs);
 	
-	
+	public static Sprite mob_santa = new Sprite(16, 0, 1, SpriteSheet.mobs);
+	public static Sprite mob_rabbit = new Sprite(16, 1, 1, SpriteSheet.mobs);
+	public static Sprite mob_cat = new Sprite(16, 0, 2, SpriteSheet.mobs);
+
+
 	public Sprite(int size, int x, int y, SpriteSheet spriteSheet){
 		this.size = size;
 		this.x = x * size;
