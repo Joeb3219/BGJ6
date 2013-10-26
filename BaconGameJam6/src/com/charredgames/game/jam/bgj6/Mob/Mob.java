@@ -1,6 +1,7 @@
 package com.charredgames.game.jam.bgj6.Mob;
 
 import com.charredgames.game.jam.bgj6.Controller;
+import com.charredgames.game.jam.bgj6.Main;
 import com.charredgames.game.jam.bgj6.graphics.Screen;
 import com.charredgames.game.jam.bgj6.graphics.Sprite;
 import com.charredgames.game.jam.bgj6.input.Keyboard;
@@ -10,6 +11,7 @@ public class Mob {
 	protected int x, y;
 	protected Sprite sprite;
 	protected Keyboard input;
+	protected boolean removed = false;
 	
 	
 	public Mob(int x, int y, Sprite sprite){
@@ -24,11 +26,20 @@ public class Mob {
 	}
 	
 	public void update(){
-		
+		this.y++;
+		if(y > Main.getWindowHeight()) removed = true;
 	}
 	
 	public void render(Screen screen){
 		screen.renderTile(this.x, this.y, this.sprite);
+	}
+	
+	public boolean removed(){
+		return removed;
+	}
+	
+	public void remove(){
+		removed = true;
 	}
 	
 }

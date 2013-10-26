@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.charredgames.game.jam.bgj6.Mob.Mob;
+import com.charredgames.game.jam.bgj6.graphics.Screen;
 import com.charredgames.game.jam.bgj6.graphics.Tile;
 
 public class Controller {
@@ -24,6 +25,18 @@ public class Controller {
 	
 	public static void addMob(Mob mob){
 		mobs.add(mob);
+	}
+	
+	public static void updateMobs(){
+		for(Mob mob : mobs){
+			if(!mob.removed()) mob.update();
+		}
+	}
+	
+	public static void renderMobs(Screen screen){
+		for(Mob mob : mobs){
+			if(!mob.removed()) mob.render(screen);
+		}
 	}
 	
 }

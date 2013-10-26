@@ -9,7 +9,7 @@ public class Sprite {
 	private SpriteSheet spriteSheet;
 	public int[] pixels;
 	
-	public static Sprite cloud = new Sprite(16, 1, 0, SpriteSheet.sprites);
+	public static Sprite cloud = new Sprite(64, 0, 1, SpriteSheet.sprites);
 	
 	public static Sprite rainbowSprite = new Sprite(Main.rainbowStrandWidth, 0xFFFF0000);
 	
