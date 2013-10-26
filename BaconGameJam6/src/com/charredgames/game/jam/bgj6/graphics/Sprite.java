@@ -1,5 +1,7 @@
 package com.charredgames.game.jam.bgj6.graphics;
 
+import com.charredgames.game.jam.bgj6.Main;
+
 public class Sprite {
 
 	public final int size;
@@ -7,10 +9,14 @@ public class Sprite {
 	private SpriteSheet spriteSheet;
 	public int[] pixels;
 	
+	public static Sprite cloud = new Sprite(16, 1, 0, SpriteSheet.sprites);
+	
+	public static Sprite rainbowSprite = new Sprite(Main.rainbowStrandWidth, 0xFFFF0000);
+	
 	public Sprite(int size, int x, int y, SpriteSheet spriteSheet){
 		this.size = size;
-		this.x = x;
-		this.y = y;
+		this.x = x * size;
+		this.y = y * size;
 		this.spriteSheet = spriteSheet;
 		pixels = new int[size * size];
 		load();
@@ -31,6 +37,14 @@ public class Sprite {
 			for(int x = 0; x < size; x++){
 				pixels[x + y * size] = spriteSheet.pixels[(x + this.x) + (y + this.y) * spriteSheet.size];
 				
+			}
+		}
+	}
+
+	public void changeColor(int newColour){
+		for(int y = 0; y < size; y ++){
+			for (int x = 0; x < size; x++){
+				pixels[x + y * size] = newColour;
 			}
 		}
 	}

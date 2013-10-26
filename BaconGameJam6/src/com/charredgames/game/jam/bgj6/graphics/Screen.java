@@ -2,7 +2,7 @@ package com.charredgames.game.jam.bgj6.graphics;
 
 public class Screen {
 
-	private static int width, height, xOffset, yOffset;
+	private static int width, height;
 	public int[] pixels;
 	private final int tileSize = 16;
 	public int[] tiles = new int[tileSize * tileSize];
@@ -19,14 +19,7 @@ public class Screen {
 		}
 	}
 	
-	public void setOffset(int xOffset, int yOffset){
-		this.xOffset = xOffset;
-		this.yOffset = yOffset;
-	}
-	
 	public void renderTile(int xPos, int yPos, Sprite sprite){
-		xPos -= xOffset;
-		yPos -= yOffset;
 		for(int y = 0; y < sprite.size; y++){
 			int yAbsolute = y + yPos;
 			for(int x = 0; x < sprite.size; x++){

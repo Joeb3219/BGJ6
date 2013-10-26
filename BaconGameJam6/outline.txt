@@ -16,4 +16,8 @@ THEME: RAINBOWS
 - Unicorn shooter game
 	- Shooting unicorns on a rainbow.
 	- But how does one lose?
+- Shooter where you shoot rainbows?
+	- Rainbow == colourize the world
+	- Everything is dark
+	- Colourize the darkness
 - 

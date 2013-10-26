@@ -11,6 +11,8 @@ import java.awt.image.DataBufferInt;
 import javax.swing.JFrame;
 
 import com.charredgames.game.jam.bgj6.graphics.Screen;
+import com.charredgames.game.jam.bgj6.graphics.Sprite;
+import com.charredgames.game.jam.bgj6.graphics.Tile;
 import com.charredgames.game.jam.bgj6.input.Keyboard;
 import com.charredgames.game.jam.bgj6.input.Mouse;
 
@@ -30,6 +32,7 @@ public class Main extends Canvas implements Runnable{
 	private BufferedImage image = new BufferedImage(_WIDTH, _HEIGHT, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
 	
+	public static final int rainbowStrandWidth = 32;
 	private Keyboard keyboard;
 	private Screen screen;
 	
@@ -44,8 +47,12 @@ public class Main extends Canvas implements Runnable{
 			return;
 		}
 		g = buffer.getDrawGraphics();
-		
+
 		screen.clear();
+		
+		loadRainbow();
+		
+		screen.renderTile(150, 150, Tile.cloud.getSprite());
 		
 		for(int i = 0; i < pixels.length; i++){
 			pixels[i] = screen.pixels[i];
@@ -53,13 +60,31 @@ public class Main extends Canvas implements Runnable{
 		
 		g.drawImage(image, 0, 0, window.getWidth(), window.getHeight(), null);
 		
-		g.setColor(Color.GRAY);
-		//g.fillRect(0, 0, window.getWidth(), window.getHeight());
-				
+		//loadRainbow();
 		
 		
 		g.dispose();
 		buffer.show();
+	}
+	
+	//Doesn't need to be a separate function, but useful to keep main rendering method clean.
+	private void loadRainbow(){
+		int currentSectorX = (int) ((_WIDTH/2)-(rainbowStrandWidth*(3.5)));
+		System.out.println(currentSectorX);
+		//int endingSectorX = (window.getWidth()/2)+(rainbowStrandWidth*3);
+		/*for(int strand = 0; strand < 7; strand++){
+			g.setColor(Controller.rainbowColours.get(strand));
+			g.fillRect(currentSectorX, 0, rainbowStrandWidth, window.getHeight());
+			currentSectorX+=rainbowStrandWidth;
+		}*/
+		for(int strand = 0; strand < 7; strand++){
+			Sprite.rainbowSprite.changeColor(Controller.rainbowColours.get(strand));
+			for(int y = 0; y < window.getHeight(); y += rainbowStrandWidth){
+				screen.renderTile(currentSectorX, y, Sprite.rainbowSprite);
+			}
+			
+			currentSectorX += rainbowStrandWidth;
+		}
 	}
 	
 	public void run(){
