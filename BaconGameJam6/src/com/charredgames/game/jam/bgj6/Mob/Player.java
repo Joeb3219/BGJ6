@@ -11,10 +11,17 @@ import com.charredgames.game.jam.bgj6.input.Keyboard;
 
 public class Player extends Mob{
 
-	private int speed = 1, health = 30;
-	private boolean magnet, invincible = false;
+	private static int speed = 1, health = 30;
+	private static boolean magnet, invincible = false;
 	
 	//protected Sprite sprite = Sprite.player;
+	
+	public static void reset(){
+		speed = 1;
+		magnet = false;
+		invincible = false;
+		health = 30;
+	}
 	
 	public Player(Keyboard input){
 		super(input);

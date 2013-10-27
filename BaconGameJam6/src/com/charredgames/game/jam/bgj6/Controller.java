@@ -21,13 +21,24 @@ public class Controller {
 			0xFF0000ff, 0xFF4b0082, 0xFF8f00ff
 			));
 	public static int tickCount = 0;
-	public static int seconds = 0;
+	public static int seconds = 0, winnerTime = 305;
 	public static int score = 0;
 	// Powerups are stored as Powerups(Type)/Integers.
 	// This way they can easily be decremented.
 	public static Map<Powerups, Integer> powerups = new HashMap<Powerups, Integer>();
-	public static int magnetDistance = 128;
-	public static boolean soundOn = true;
+	public static int magnetDistance = 32;
+	public static boolean soundOn = true, gameWon = false;
+	
+	public static void reset(){
+		mobs.clear();
+		tickCount=0;
+		seconds=0;
+		score=0;
+		gameWon = false;
+		for(Entry<Powerups, Integer> entry : powerups.entrySet()){
+			entry.setValue(0);
+		}
+	}
 	
 	public static void incrementPowerup(Powerups type){
 		for(Entry<Powerups, Integer> entry : powerups.entrySet()){
@@ -55,6 +66,10 @@ public class Controller {
 			for(Entry<Powerups, Integer> entry : powerups.entrySet()){
 				if(entry.getValue()>0) entry.setValue(entry.getValue()-1);
 			}
+		}
+		if(seconds > winnerTime) {
+			score += 1000;
+			gameWon = true;
 		}
  	}
 	

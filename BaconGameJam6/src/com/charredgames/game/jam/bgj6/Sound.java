@@ -13,9 +13,9 @@ public class Sound {
 
 	public AudioClip clip;
 	
-	public static Sound damage = new Sound("/sound/hurt1.wav");
-	public static Sound powerup = new Sound("/sound/powerup.wav");
-	public static Sound coin = new Sound("/sound/coin.wav");
+	public static Sound damage = new Sound("/sound/hurt.wav");
+	public static Sound powerup = new Sound("/sound/pickup.wav");
+	public static Sound coin = new Sound("/sound/pickup.wav");
 	
 	public Sound(String path){
 			this.clip = Applet.newAudioClip(Sound.class.getResource(path));

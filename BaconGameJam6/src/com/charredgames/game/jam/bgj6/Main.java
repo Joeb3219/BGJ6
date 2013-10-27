@@ -8,8 +8,10 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.IOException;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import com.charredgames.game.jam.bgj6.Mob.Mob;
@@ -30,7 +32,8 @@ public class Main extends Canvas implements Runnable{
 	public static final int _DESIREDTPS = 60;
 	private boolean isRunning = false;
 	private String title = "CharredGames: Leprechaun Simulator 2014 (BGJ 6) ";
-	public boolean paused = false;
+	public boolean paused = false, loading = true;
+	public int loadingTicks = 0;
 	
 	private Thread mainThread;
 	private static JFrame window;
@@ -38,6 +41,7 @@ public class Main extends Canvas implements Runnable{
 	private Graphics g;
 	private BufferedImage image = new BufferedImage(_WIDTH, _HEIGHT, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
+	private BufferedImage logo;
 	
 	public static final int rainbowStrandWidth = 32;
 	private Keyboard keyboard;
@@ -46,7 +50,12 @@ public class Main extends Canvas implements Runnable{
 	private Random rand = new Random();
 	
 	private void tick(){
-		if(paused) return;
+		if(loading){
+			loadingTicks++;
+			if(loadingTicks/_DESIREDTPS >= 3) loading = false;
+			return;
+		}
+		if(paused || player.getHealth() == 0 || Controller.gameWon) return;
 		Controller.update();
 		keyboard.update();
 		player.update();
@@ -69,6 +78,14 @@ public class Main extends Canvas implements Runnable{
 		}
 		g = buffer.getDrawGraphics();
 		
+		if(loading){
+			g.setColor(Color.gray);
+			g.fillRect(0, 0, window.getWidth(), window.getHeight());
+			g.drawImage(logo, (window.getWidth()-logo.getWidth())/2, (window.getHeight()-logo.getHeight())/2, logo.getWidth(), logo.getHeight(), null);
+			g.dispose();
+			buffer.show();
+			return;
+		}
 
 		screen.clear();
 		
@@ -99,7 +116,6 @@ public class Main extends Canvas implements Runnable{
 		timerDrawY += 15;
 		g.drawString("Invincible: " + Controller.powerups.get(Powerups.INVINCIBLE), 5, timerDrawY);
 		
-		
 		//Logo & title
 		g.setColor(Color.GREEN);
 		g.drawString("Leprechaun Simulator 2014", window.getWidth()-g.getFontMetrics().stringWidth("Leprechaun Simulator 2014")-10, 15);
@@ -109,6 +125,41 @@ public class Main extends Canvas implements Runnable{
 		g.drawString("Charred", window.getWidth()-g.getFontMetrics().stringWidth("CharredGames")-15, 40);
 		g.setColor(new Color(0xFF00AFC9));
 		g.drawString("Games", window.getWidth()-g.getFontMetrics().stringWidth("Charred"), 40);
+		
+		//Death Message && restart button
+		int restartStartX = 0, restartEndX = 0, restartStartY = 0, restartEndY = 0;
+		if(player.getHealth() == 0){
+			g.setFont(new Font(Font.DIALOG, Font.BOLD, 40));
+			g.setColor(new Color(0xFF00AFC9));
+			g.drawString("You Lose!", (window.getWidth()-g.getFontMetrics().stringWidth("You Lose!"))/2, (window.getHeight()-g.getFontMetrics().getHeight())/2);
+			g.setFont(new Font(Font.DIALOG, Font.PLAIN, 20));
+			String line = "Score: " + Controller.getScore() + ". Time: " + Controller.getTime();
+			g.drawString(line, (window.getWidth()-g.getFontMetrics().stringWidth(line))/2, ((window.getHeight())/2)+5);
+			g.setFont(new Font(Font.DIALOG, Font.BOLD, 40));
+			g.setColor(Color.BLACK);
+			restartStartX = (window.getWidth()-g.getFontMetrics().stringWidth("Restart"))/2;
+			restartEndX = restartStartX + g.getFontMetrics().stringWidth("Restart");
+			restartStartY = ((window.getHeight()/2))+45;
+			restartEndY = restartStartY - g.getFontMetrics().getHeight();
+			g.drawString("Restart", (window.getWidth()-g.getFontMetrics().stringWidth("Restart"))/2, ((window.getHeight()/2))+45);
+		}
+		
+		//Winner Message && restart button
+		if(Controller.gameWon){
+			g.setFont(new Font(Font.DIALOG, Font.BOLD, 40));
+			g.setColor(new Color(0xFF00AFC9));
+			g.drawString("You Win!", (window.getWidth()-g.getFontMetrics().stringWidth("You Win!"))/2, (window.getHeight()-g.getFontMetrics().getHeight())/2);
+			g.setFont(new Font(Font.DIALOG, Font.PLAIN, 20));
+			String line = "Score: " + Controller.getScore() + ". Time: " + Controller.getTime();
+			g.drawString(line, (window.getWidth()-g.getFontMetrics().stringWidth(line))/2, ((window.getHeight())/2)+5);
+			g.setFont(new Font(Font.DIALOG, Font.BOLD, 40));
+			g.setColor(Color.BLACK);
+			restartStartX = (window.getWidth()-g.getFontMetrics().stringWidth("Restart"))/2;
+			restartEndX = restartStartX + g.getFontMetrics().stringWidth("Restart");
+			restartStartY = ((window.getHeight()/2))+45;
+			restartEndY = restartStartY - g.getFontMetrics().getHeight();
+			g.drawString("Restart", (window.getWidth()-g.getFontMetrics().stringWidth("Restart"))/2, ((window.getHeight()/2))+45);
+		}
 		
 		//Pause button && popup
 		g.setColor(Color.BLACK);
@@ -145,11 +196,21 @@ public class Main extends Canvas implements Runnable{
 				else Controller.soundOn = true;
 			}
 			
+			if((player.getHealth() == 0 || Controller.gameWon) && (mX >= restartStartX && mX <= restartEndX) && (mY <= restartStartY && mY >= restartEndY)){
+				reset();
+			}
+
 			Mouse.reset();
 		}
 		
 		g.dispose();
 		buffer.show();
+	}
+	
+	private void reset(){
+		Controller.reset();
+		player.reset();
+		player.setPosition(_WIDTH/2, _HEIGHT);
 	}
 	
 	private void generateMob(){
@@ -191,7 +252,7 @@ public class Main extends Canvas implements Runnable{
 	
 	//Doesn't need to be a separate function, but reduces clutter.
 	private void generateCloud(){
-		int shouldSpawn = rand.nextInt(4000);
+		int shouldSpawn = rand.nextInt(2000);
 		if(shouldSpawn < 6){
 			int side = rand.nextInt(2);
 			if(side==1) new Mob(10,-100, 0, Sprite.cloud);
@@ -260,6 +321,9 @@ public class Main extends Canvas implements Runnable{
 		Dimension wSize = new Dimension(_WIDTH * _SCALE, _HEIGHT * _SCALE);
 		setPreferredSize(wSize);
 		window = new JFrame();
+		try {
+			logo = ImageIO.read(Main.class.getResource("/textures/logo.png"));
+		} catch (IOException e) {e.printStackTrace();}
 		keyboard = new Keyboard();
 		Mouse mouse = new Mouse();
 		addKeyListener(keyboard);
@@ -267,7 +331,7 @@ public class Main extends Canvas implements Runnable{
 		addMouseMotionListener(mouse);
 		screen = new Screen(_WIDTH, _HEIGHT);
 		player = new Player(keyboard);
-		player.setPosition(_WIDTH/2, _HEIGHT);
+		reset();
 		Controller.powerups.put(Powerups.MAGNET, 0);
 		Controller.powerups.put(Powerups.INVINCIBLE,0);
 		Controller.powerups.put(Powerups.SPEED, 0);
