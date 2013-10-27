@@ -15,7 +15,7 @@ public class Sound {
 			this.clip = Applet.newAudioClip(Sound.class.getResource(path));
 	}
 
-	public synchronized void playSound() {
+	public void playSound() {
 		if(Controller.soundOn) clip.play();
 	}
 }

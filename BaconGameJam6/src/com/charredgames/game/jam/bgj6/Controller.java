@@ -35,7 +35,7 @@ public class Controller {
 		score=0;
 		gameWon = false;
 		for(Entry<Powerups, Integer> entry : powerups.entrySet()){
-			entry.setValue(100);
+			entry.setValue(0);
 		}
 	}
 	
