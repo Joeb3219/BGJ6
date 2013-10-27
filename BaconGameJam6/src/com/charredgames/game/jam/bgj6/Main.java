@@ -20,12 +20,12 @@ import com.charredgames.game.jam.bgj6.Mob.Powerup;
 import com.charredgames.game.jam.bgj6.Mob.Powerups;
 import com.charredgames.game.jam.bgj6.graphics.Screen;
 import com.charredgames.game.jam.bgj6.graphics.Sprite;
-import com.charredgames.game.jam.bgj6.graphics.Tile;
 import com.charredgames.game.jam.bgj6.input.Keyboard;
 import com.charredgames.game.jam.bgj6.input.Mouse;
 
 public class Main extends Canvas implements Runnable{
 
+	private static final long serialVersionUID = 1L;
 	public static final int _WIDTH = 350;
 	public static final int _HEIGHT = _WIDTH / 16 * 9;
 	public static final int _SCALE = 3;
@@ -255,20 +255,14 @@ public class Main extends Canvas implements Runnable{
 		int shouldSpawn = rand.nextInt(2000);
 		if(shouldSpawn < 6){
 			int side = rand.nextInt(2);
-			if(side==1) new Mob(10,-100, 0, Sprite.cloud);
-			else new Mob(_WIDTH - 50, -100, 0, Sprite.cloud);
+			if(side==1) new Mob(10,-100, -3, Sprite.cloud);
+			else new Mob(_WIDTH - 50, -100, -3, Sprite.cloud);
 		}
 	}
 	
 	//Doesn't need to be a separate function, but useful to keep main rendering method clean.
 	private void loadRainbow(){
 		int currentSectorX = (int) ((_WIDTH/2)-(rainbowStrandWidth*(3.5)));
-		//int endingSectorX = (window.getWidth()/2)+(rainbowStrandWidth*3);
-		/*for(int strand = 0; strand < 7; strand++){
-			g.setColor(Controller.rainbowColours.get(strand));
-			g.fillRect(currentSectorX, 0, rainbowStrandWidth, window.getHeight());
-			currentSectorX+=rainbowStrandWidth;
-		}*/
 		for(int strand = 0; strand < 7; strand++){
 			Sprite.rainbowSprite.changeColor(Controller.rainbowColours.get(strand));
 			for(int y = 0; y < window.getHeight(); y += rainbowStrandWidth){
@@ -340,13 +334,13 @@ public class Main extends Canvas implements Runnable{
 	public static void main(String[] args){
 		Main main = new Main();
 		
-		main.window.add(main);
-		main.window.pack();
-		main.window.setTitle(main.title);
-		main.window.setLocationRelativeTo(null);
-		main.window.setResizable(false);
-		main.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		main.window.setVisible(true);
+		window.add(main);
+		window.pack();
+		window.setTitle(main.title);
+		window.setLocationRelativeTo(null);
+		window.setResizable(false);
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setVisible(true);
 		
 		main.start();
 	}

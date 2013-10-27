@@ -1,5 +1,7 @@
 package com.charredgames.game.jam.bgj6.Mob;
 
+import java.util.Random;
+
 import com.charredgames.game.jam.bgj6.Controller;
 import com.charredgames.game.jam.bgj6.Main;
 import com.charredgames.game.jam.bgj6.graphics.Screen;
@@ -12,8 +14,9 @@ public class Mob {
 	protected Sprite sprite;
 	protected Keyboard input;
 	protected boolean removed = false;
-	protected int direction = 0;
+	protected int direction = 2;
 	public int points = 0;
+	protected Random rand = new Random();
 	
 	public Mob(int x, int y, int points, Sprite sprite){
 		this.x = x;

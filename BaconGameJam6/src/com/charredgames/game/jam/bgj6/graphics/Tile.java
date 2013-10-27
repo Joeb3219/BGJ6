@@ -4,7 +4,7 @@ import com.charredgames.game.jam.bgj6.Controller;
 
 public class Tile {
 
-	private int x, y;
+	//private int x, y;
 	private Sprite sprite;
 	private boolean solid;
 	

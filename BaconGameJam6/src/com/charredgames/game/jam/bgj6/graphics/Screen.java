@@ -2,7 +2,7 @@ package com.charredgames.game.jam.bgj6.graphics;
 
 public class Screen {
 
-	private static int width, height;
+	private int width, height;
 	public int[] pixels;
 	private final int tileSize = 16;
 	public int[] tiles = new int[tileSize * tileSize];

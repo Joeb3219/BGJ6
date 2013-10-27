@@ -1,7 +1,5 @@
 package com.charredgames.game.jam.bgj6.Mob;
 
-import java.util.Map.Entry;
-
 import com.charredgames.game.jam.bgj6.Controller;
 import com.charredgames.game.jam.bgj6.Main;
 import com.charredgames.game.jam.bgj6.Sound;
@@ -16,7 +14,7 @@ public class Player extends Mob{
 	
 	//protected Sprite sprite = Sprite.player;
 	
-	public static void reset(){
+	public void reset(){
 		speed = 1;
 		magnet = false;
 		invincible = false;

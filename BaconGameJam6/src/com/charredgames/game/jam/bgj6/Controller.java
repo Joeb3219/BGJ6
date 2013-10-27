@@ -1,6 +1,5 @@
 package com.charredgames.game.jam.bgj6;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -36,7 +35,7 @@ public class Controller {
 		score=0;
 		gameWon = false;
 		for(Entry<Powerups, Integer> entry : powerups.entrySet()){
-			entry.setValue(0);
+			entry.setValue(100);
 		}
 	}
 	
